@@ -4,7 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "typecheck": "bun check"
+    "typecheck": "bun check",
+    "start": "bun run index.ts",
+    "dev": "bun run --watch index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -13,7 +15,10 @@
     "typescript": "^7"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.9.1",
+    "@nullix/zod-mongoose": "^3.6.0",
     "hono": "^4.13.18",
+    "mongoose": "^9.12.1",
     "zod": "^4.6.7"
   }
 }
