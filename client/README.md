@@ -1,5 +1,16 @@
 # React + TypeScript + Vite
 
+## Local configuration
+
+Copy `.env.example` to `.env` and set `VITE_API_URL` to the API base URL. The example
+uses `http://localhost:5000/api` for local development.
+
+## Deploy to Vercel
+
+Set the Vercel project root directory to `client`. Configure `VITE_API_URL` in the
+Vercel project's environment variables to the Render API base URL, including `/api`
+(for example, `https://your-render-service.onrender.com/api`), then redeploy.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

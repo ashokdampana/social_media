@@ -14,7 +14,7 @@ export const generateCookie = async (c: Context, payload: AuthUser) => {
   setCookie(c, 'token', token, {
     httpOnly: true,
     secure: Bun.env.NODE_ENV === 'production',
-    sameSite: 'Lax',
+    sameSite: Bun.env.NODE_ENV === 'production' ? 'None' : 'Lax',
     path: '/',
     maxAge: SEVEN_DAYS,
   });
