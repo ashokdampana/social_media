@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { userSchema, type UserInputType } from '../types/schema';
 import useAuthStore from '../store/useAuthStore';
 import { registerUserApi } from '../services/authApi';
+import { getApiErrorMessage } from '../services/api';
 
 function Register() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function Register() {
       setAuth(res.data.data);
       navigate('/feed');
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Could not create account');
+      setErrorMessage(getApiErrorMessage(error, 'Could not create account'));
     }
   };
 

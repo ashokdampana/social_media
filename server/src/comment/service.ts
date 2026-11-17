@@ -1,5 +1,6 @@
 import { HTTPException } from 'hono/http-exception';
-import { PostModel, CommentModel } from '../model';
+import { Types } from 'mongoose';
+import { PostModel, CommentModel, UserModel } from '../model';
 import type { CommentInputType } from '../schema';
 import type { AuthUser } from '../utils/authMiddleware';
 
@@ -19,10 +20,22 @@ const commentService = {
   },
 
   findByPost: (postId: string, page = 1, limit = 10) =>
-    CommentModel.find({ postId })
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit),
+    CommentModel.aggregate([
+      { $match: { postId: new Types.ObjectId(postId) } },
+      { $sort: { createdAt: -1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: UserModel.collection.name,
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'author',
+        },
+      },
+      { $set: { user_email: { $arrayElemAt: ['$author.email', 0] } } },
+      { $unset: 'author' },
+    ]),
 
   update: async (id: string, user: AuthUser, body: Pick<CommentInputType, 'text'>) => {
     const comment = await getOwned(id, user);

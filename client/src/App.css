@@ -182,3 +182,39 @@
     border-right-color: var(--border);
   }
 }
+
+.post small,
+.comment-author {
+  color: var(--text);
+  font-size: 0.78em;
+  font-weight: 400;
+}
+
+.comment-items {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  text-align: left;
+}
+
+.comment-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+}
+
+.comment-author {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.comment-text {
+  background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text-h);
+  font-weight: 500;
+  margin: 0;
+  padding: 8px 10px;
+}

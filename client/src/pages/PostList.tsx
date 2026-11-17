@@ -58,7 +58,7 @@ export default function PostList() {
             {post.createdAt ? new Date(post.createdAt).toLocaleString() : 'Just now'}
             {' · '}user {post.userId.slice(-6)}
           </small>
-          <CommentList postId={post._id} />
+          <CommentList postId={post._id} initialComments={post.comments} />
         </article>
       ))}
     </section>

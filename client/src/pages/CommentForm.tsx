@@ -33,7 +33,7 @@ export default function CommentForm({
       <input {...register("text")} placeholder="Add a comment..." />
       {errors.text && <p>{errors.text.message}</p>}
       {errors.root && <p role="alert">{errors.root.message}</p>}
-      <button disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Comment"}</button>
+      <button disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Make comment"}</button>
     </form>
   );
 }

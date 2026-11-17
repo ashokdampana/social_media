@@ -36,6 +36,7 @@ export type CommentResponse = {
   _id: string;
   text: string;
   userId: string;
+  user_email?: string;
   postId: string;
   createdAt?: string;
   updatedAt?: string;

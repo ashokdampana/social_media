@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api, { getApiErrorMessage } from '../services/api';
 import useAuthStore from '../store/useAuthStore';
 import CommentForm from './CommentForm';
@@ -9,10 +10,16 @@ type CommentListResponse = {
   data: CommentResponse[];
 };
 
-export default function CommentList({ postId }: { postId: string }) {
+export default function CommentList({
+  postId,
+  initialComments = [],
+}: {
+  postId: string;
+  initialComments?: CommentResponse[];
+}) {
   const user = useAuthStore((state) => state.user);
-  const [comments, setComments] = useState<CommentResponse[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState<CommentResponse[]>(initialComments);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadComments = useCallback(async () => {
@@ -32,10 +39,6 @@ export default function CommentList({ postId }: { postId: string }) {
     }
   }, [postId]);
 
-  useEffect(() => {
-    void loadComments();
-  }, [loadComments]);
-
   return (
     <section className="comment-list">
       {loading && <p>Loading comments...</p>}
@@ -43,13 +46,21 @@ export default function CommentList({ postId }: { postId: string }) {
 
       {!loading && comments.length === 0 && <p>No comments yet.</p>}
 
-      <ul>
+      <h3><strong>Comments</strong></h3>
+      <ul className="comment-items">
         {comments.map((comment) => (
-          <li key={comment._id}>{comment.text}</li>
+          <li key={comment._id} className="comment-item">
+            <small className="comment-author">{comment.user_email ?? 'User'}</small>
+            <p className="comment-text">{comment.text}</p>
+          </li>
         ))}
       </ul>
 
-      {user && <CommentForm postId={postId} onDone={loadComments} />}
+      {user ? (
+        <CommentForm postId={postId} onDone={loadComments} />
+      ) : (
+        <p><Link to="/login">Log in</Link> to comment.</p>
+      )}
     </section>
   );
 }

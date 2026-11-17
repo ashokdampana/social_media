@@ -1,5 +1,6 @@
 import { HTTPException } from 'hono/http-exception';
-import { PostModel, CommentModel } from '../model';
+import { PostModel, CommentModel, UserModel } from '../model';
+import commentService from '../comment/service';
 import type { PostInputType } from '../schema';
 import type { AuthUser } from '../utils/authMiddleware';
 
@@ -16,17 +17,39 @@ const postService = {
     PostModel.create({ ...data, userId: user.id }),
 
   findPosts: (page = 1, limit = 10) =>
-    PostModel.find().sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit),
+    PostModel.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: CommentModel.collection.name,
+          let: { postId: '$_id' },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$postId', '$$postId'] } } },
+            { $sort: { createdAt: -1 } },
+            { $limit: 50 },
+            {
+              $lookup: {
+                from: UserModel.collection.name,
+                localField: 'userId',
+                foreignField: '_id',
+                as: 'author',
+              },
+            },
+            { $set: { user_email: { $arrayElemAt: ['$author.email', 0] } } },
+            { $unset: 'author' },
+          ],
+          as: 'comments',
+        },
+      },
+    ]),
 
   findPost: async (id: string, page = 1, limit = 10) => {
     const post = await PostModel.findById(id).lean();
     if (!post) throw new HTTPException(404, { message: 'Post not found' });
 
-    const comments = await CommentModel.find({ postId: id })
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    const comments = await commentService.findByPost(id, page, limit);
 
     return { ...post, comments };
   },
