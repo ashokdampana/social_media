@@ -35,7 +35,7 @@ export const CommentModel = mongoose.model('Comment', mongoCommentSchema);
 // Posts
 const mongoPostSchema = new mongoose.Schema({
   content: { type: String, required: true }, // Fixed typo: 'requried' -> 'required'
-  author: { 
+  userId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
     required: true 

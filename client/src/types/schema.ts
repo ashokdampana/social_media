@@ -8,19 +8,19 @@ export const userSchema = z.object({
 });
 
 
-export const createPostSchema = z.object({
+export const postInputSchema = z.object({
   content: z.string().min(1, 'Post cannot be empty'),
 });
 
-export const createCommentSchema = z.object({
+export const commentInputSchema = z.object({
   text: z.string().min(1, 'Comment cannot be empty'),
 });
 
 
 // 2. INPUT TYPES (Forms & API Request Bodies)
-export type UserInput = z.infer<typeof userSchema>;
-export type CreatePostInput = z.infer<typeof createPostSchema>;
-export type CreateCommentInput = z.infer<typeof createCommentSchema>;
+export type UserInputType = z.infer<typeof userSchema>;
+export type PostInputType = z.infer<typeof postInputSchema>;
+export type CommentInputType = z.infer<typeof commentInputSchema>;
 
 
 // 3. RESPONSE TYPES (API Outputs & UI State)
@@ -35,18 +35,17 @@ export type AuthResponse = {
 export type CommentResponse = {
   _id: string;
   text: string;
-  user_id: string;
-  user_username: string;
+  userId: string;
+  postId: string;
   createdAt?: string;
   updatedAt?: string;
 };
 
 export type PostResponse = {
   _id: string;
-  user_id: string;
-  user_username: string;
+  userId: string;
   content: string;
-  comments: CommentResponse[];
+  comments?: CommentResponse[];
   createdAt?: string;
   updatedAt?: string;
 };

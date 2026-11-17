@@ -6,7 +6,7 @@ import type { UserInputType } from '../schema';
 import type { AuthUser } from '../utils/authMiddleware';
 
 type AuthContext = Context<{ Variables: { user: AuthUser } }>;
-type BodyContext<T> = Context<any, any, { in: { json: T }; out: { json: T } }>;
+type BodyContext<T> = Context<{}, string, { in: { json: T }; out: { json: T } }>;
 
 // sendSuccess(c, message, data, status)
 const authController = {

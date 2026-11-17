@@ -1,7 +1,6 @@
 import axios from "axios"
 import { create } from "zustand"
 import { checkMeApi, logoutApi, type AuthUser } from "../services/authApi"
-import { getApiErrorMessage } from "../services/api"
 
 type AuthStoreType = {
     user: AuthUser | null,
@@ -20,14 +19,14 @@ const useAuthStore = create<AuthStoreType>((set) => ({
     checkAuth: async () => {
         try {
             const res = await checkMeApi();
-            set({ user: res.data.user, loading: false, error: null })
+            set({ user: res.data.data, loading: false, error: null })
         } catch (error) {
             const isUnauthenticated = axios.isAxiosError(error) &&
                 (error.response?.status === 401 || error.response?.status === 404);
             set({
                 user: null,
                 loading: false,
-                error: isUnauthenticated ? null : getApiErrorMessage(error, 'Could not verify your session'),
+                error: isUnauthenticated ? null : error instanceof Error ? error.message : 'Could not verify your session',
             })
         }
     },

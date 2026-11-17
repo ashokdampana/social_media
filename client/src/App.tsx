@@ -6,6 +6,7 @@ import useAuthStore from './store/useAuthStore';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Feed from './pages/Feed';
 
 function App() {
   const { loading, error, checkAuth } = useAuthStore();
@@ -30,7 +31,7 @@ function App() {
           <Route path='/' element={<div>Home page</div>} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/feed' element={<div>Feed page</div>} />
+          <Route path='/feed' element={<Feed />} />
 
         </Routes>
         <section className='app-footer'></section>

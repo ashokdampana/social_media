@@ -1,80 +1,59 @@
+import { HTTPException } from 'hono/http-exception';
 import { UserModel } from '../model';
 import type { UserInputType } from '../schema';
-import tryCatch from '../utils/tryCatch';
-import { HTTPException } from 'hono/http-exception';
 import type { AuthUser } from '../utils/authMiddleware';
 
-const formatUser = (user: any): AuthUser => ({
-  id: user._id.toString(),
-  email: user.email,
-  role: user.role,
+type UserRecord = {
+  _id: { toString: () => string };
+  email: string;
+  role: AuthUser['role'];
+};
+
+const formatUser = (u: UserRecord): AuthUser => ({
+  id: u._id.toString(),
+  email: u.email,
+  role: u.role,
 });
 
+const getUser = async (id: string) => {
+  const user = await UserModel.findById(id);
+  if (!user) throw new HTTPException(404, { message: 'User not found' });
+  return user;
+};
+
 const authService = {
-  register: async (data: UserInputType) => {
-    const { email, password, role } = data;
+  register: async ({ email, password, role }: UserInputType) => {
+    if (await UserModel.exists({ email }))
+      throw new HTTPException(400, { message: 'Email already exists' });
 
-    const { data: userExists, error: findErr } = await tryCatch(UserModel.findOne({ email }));
-    if (findErr) throw new HTTPException(500, { message: 'Database error' });
-    if (userExists) throw new HTTPException(400, { message: 'Email already exists' });
-
-    const hashedPassword = await Bun.password.hash(password);
-    const { data: newUser, error: createErr } = await tryCatch(
-      UserModel.create({ email, password: hashedPassword, role })
-    );
-    if (createErr || !newUser) throw new HTTPException(400, { message: 'Failed to create user' });
-
-    return formatUser(newUser);
+    const user = await UserModel.create({
+      email,
+      password: await Bun.password.hash(password),
+      role,
+    });
+    return formatUser(user);
   },
 
   login: async ({ email, password }: UserInputType) => {
-    // Only place that needs '+password' since schema sets select: false
-    const { data: user, error: findErr } = await tryCatch(
-      UserModel.findOne({ email }).select('+password')
-    );
-    if (findErr) throw new HTTPException(500, { message: 'Database error' });
-
-    if (!user || !(await Bun.password.verify(password, user.password))) {
+    const user = await UserModel.findOne({ email }).select('+password');
+    if (!user || !(await Bun.password.verify(password, user.password)))
       throw new HTTPException(401, { message: 'Invalid email or password' });
-    }
-
     return formatUser(user);
   },
 
-  findUsers: async () => {
-    const { data: users, error } = await tryCatch(UserModel.find().lean());
-    if (error || !users) throw new HTTPException(500, { message: 'Database error' });
+  findUsers: async () => (await UserModel.find().lean()).map(formatUser),
 
-    return users.map(formatUser);
-  },
-
-  checkMe: async (id: string) => {
-    const { data: user, error } = await tryCatch(UserModel.findById(id));
-    if (error) throw new HTTPException(400, { message: 'Invalid user ID' });
-    if (!user) throw new HTTPException(404, { message: 'User not found' });
-
-    return formatUser(user);
-  },
+  checkMe: async (id: string) => formatUser(await getUser(id)),
 
   update: async (id: string, body: Partial<UserInputType>) => {
-    const updateData = { ...body };
-    if (updateData.password) {
-      updateData.password = await Bun.password.hash(updateData.password);
-    }
-
-    const { data: updatedUser, error } = await tryCatch(
-      UserModel.findByIdAndUpdate(id, updateData, { new: true })
-    );
-    if (error) throw new HTTPException(400, { message: 'Failed to update user' });
-    if (!updatedUser) throw new HTTPException(404, { message: 'User not found' });
-
-    return formatUser(updatedUser);
+    const user = await getUser(id);
+    if (body.password) body.password = await Bun.password.hash(body.password);
+    Object.assign(user, body);
+    return formatUser(await user.save());
   },
 
   deleteUser: async (id: string) => {
-    const { data: deleted, error } = await tryCatch(UserModel.findByIdAndDelete(id));
-    if (error) throw new HTTPException(400, { message: 'Invalid user ID' });
-    if (!deleted) throw new HTTPException(404, { message: 'User not found' });
+    await (await getUser(id)).deleteOne();
   },
 };
 

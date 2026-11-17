@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
-import { userSchema, type UserInput } from '../types/schema';
+import { userSchema, type UserInputType } from '../types/schema';
 import { loginUserApi } from '../services/authApi';
 import useAuthStore from '../store/useAuthStore';
-import { getApiErrorMessage } from '../services/api';
 
 function Login() {
   const navigate = useNavigate();
@@ -16,17 +15,18 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<UserInput>({
+  } = useForm<UserInputType>({
     resolver: zodResolver(userSchema),
   });
 
-  const handleLogin = async (data: UserInput) => {
+  const handleLogin = async (data: UserInputType) => {
+    setErrorMessage(null);
     try {
       const res = await loginUserApi(data);
-      setAuth(res.data.user);
+      setAuth(res.data.data);
       navigate('/feed');
-    } catch (error: unknown) {
-      setErrorMessage(getApiErrorMessage(error, 'Something went wrong'));
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not log in');
     }
   };
 

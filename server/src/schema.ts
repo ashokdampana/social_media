@@ -56,8 +56,7 @@ export const postInputSchema = z.object({
 const postOutputSchema = z.object({
   _id: z.string(),
   content: z.string(),
-  author: z.string(), // Matches 'author' ObjectId in your Mongoose PostModel
-  user_email: z.email().optional(), // Optional if populated from User
+  userID: z.email().optional(), // Optional if populated from User
   comments: z.array(commentOutputSchema).default([]),
   createdAt: z.union([z.date(), z.string()]),
   updatedAt: z.union([z.date(), z.string()]),

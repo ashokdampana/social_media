@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
-import { getApiErrorMessage } from '../services/api';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -13,8 +12,8 @@ function Navbar() {
     try {
       await logout();
       navigate('/login');
-    } catch (error: unknown) {
-      setErrorMessage(getApiErrorMessage(error, 'Could not log out'));
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not log out');
     }
   };
 
