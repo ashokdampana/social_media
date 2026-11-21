@@ -33,19 +33,19 @@ function Login() {
   return (
     <div className="form-login">
       <h2>Login</h2>
-      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {errorMessage && <p className="form-error" role="alert">{errorMessage}</p>}
 
-      <form onSubmit={handleSubmit(handleLogin)}>
-        <div>
+      <form className="auth-form" onSubmit={handleSubmit(handleLogin)}>
+        <div className="form-field">
           <label>Email</label>
           <input type="email" {...register('email')} />
-          {errors.email && <p>{errors.email.message}</p>}
+          {errors.email && <p className="field-error">{errors.email.message}</p>}
         </div>
 
-        <div>
+        <div className="form-field">
           <label>Password</label>
           <input type="password" {...register('password')} />
-          {errors.password && <p>{errors.password.message}</p>}
+          {errors.password && <p className="field-error">{errors.password.message}</p>}
         </div>
 
         <button type="submit" disabled={isSubmitting}>

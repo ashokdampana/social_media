@@ -21,7 +21,7 @@ function Navbar() {
     <header className="app-header">
       <nav className="app-header-nav">
         {errorMessage && <p role="alert">{errorMessage}</p>}
-        <div className="nav-left" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        <div className="nav-left" id="brand" onClick={() => navigate('/')}>
           <h2>Logo</h2>
         </div>
 

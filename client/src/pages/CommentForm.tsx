@@ -29,7 +29,7 @@ export default function CommentForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="comment-form" onSubmit={handleSubmit(onSubmit)}>
       <input {...register("text")} placeholder="Add a comment..." />
       {errors.text && <p>{errors.text.message}</p>}
       {errors.root && <p role="alert">{errors.root.message}</p>}

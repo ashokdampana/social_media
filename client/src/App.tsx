@@ -15,20 +15,20 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  if (loading) return <div>Checking your session...</div>;
+  if (loading) return <div className="session-loading">Checking your session...</div>;
 
 
   return (
     <>
-      <div className='App'>
+      <div className="app-shell" id="app">
         <Navbar />
         {error && (
-          <p role="alert">
+          <p className="app-alert" role="alert">
             {error} <button onClick={() => void checkAuth()}>Retry</button>
           </p>
         )}
         <Routes>
-          <Route path='/' element={<div>Home page</div>} />
+          <Route path="/" element={<main className="home-page" id="home"><h1>Welcome</h1><p>Join the conversation and share what is on your mind.</p></main>} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
           <Route path='/feed' element={<Feed />} />

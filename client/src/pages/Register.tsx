@@ -34,20 +34,20 @@ function Register() {
   return (
     <div className="form-register">
       <h2>Create Account</h2>
-      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {errorMessage && <p className="form-error" role="alert">{errorMessage}</p>}
 
-      <form onSubmit={handleSubmit(handleRegister)}>
+      <form className="auth-form" onSubmit={handleSubmit(handleRegister)}>
 
-        <div>
+        <div className="form-field">
           <label>Email</label>
           <input type="email" {...register('email')} />
-          {errors.email && <p>{errors.email.message}</p>}
+          {errors.email && <p className="field-error">{errors.email.message}</p>}
         </div>
 
-        <div>
+        <div className="form-field">
           <label>Password</label>
           <input type="password" {...register('password')} />
-          {errors.password && <p>{errors.password.message}</p>}
+          {errors.password && <p className="field-error">{errors.password.message}</p>}
         </div>
 
         <button type="submit" disabled={isSubmitting}>

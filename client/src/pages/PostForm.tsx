@@ -23,7 +23,7 @@ export default function PostForm({ onDone }: { onDone?: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="post-composer" onSubmit={handleSubmit(onSubmit)}>
       <textarea {...register("content")} placeholder="Write a post..." />
       {errors.content && <p>{errors.content.message}</p>}
       {errors.root && <p role="alert">{errors.root.message}</p>}
