@@ -1,0 +1,17 @@
+{
+  "name": "social-media",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "typecheck": "bun check",
+    "test": "bun test --cwd server",
+    "deploy": "bun run test && git push -u origin HEAD"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  }
+}
