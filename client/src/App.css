@@ -1,220 +1,306 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
-
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+.App {
+  min-height: 100vh;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
 }
 
-#center {
+.app-header-nav {
+  width: min(960px, calc(100% - 32px));
+  min-height: 64px;
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-#next-steps {
+.nav-left h2 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.nav-right {
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
+  align-items: center;
   gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.nav-right span {
+  max-width: 220px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.ticks {
-  position: relative;
+.nav-right button,
+.post-list form button,
+.comment-list form button,
+.form-login button,
+.form-register button,
+.App [role="alert"] + button {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 14px;
+  color: #fff;
+  background: var(--primary);
+  font-weight: 700;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.nav-right button:hover,
+.post-list form button:hover,
+.comment-list form button:hover,
+.form-login button:hover,
+.form-register button:hover,
+.App [role="alert"] + button:hover {
+  background: var(--primary-hover);
+}
+
+.nav-right button:active,
+.post-list form button:active,
+.comment-list form button:active,
+.form-login button:active,
+.form-register button:active {
+  transform: translateY(1px);
+}
+
+.feed,
+.form-login,
+.form-register {
+  width: min(680px, calc(100% - 32px));
+  margin: 32px auto;
+}
+
+.feed > h2 {
+  margin: 0 0 16px;
+  color: var(--heading);
+  font-size: 22px;
+}
+
+.post-list {
+  display: grid;
+  gap: 16px;
+}
+
+.post-list > form,
+.post,
+.form-login,
+.form-register {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.post-list > form,
+.post {
+  padding: 18px;
+}
+
+.post-list form,
+.comment-list form,
+.form-login form,
+.form-register form {
+  display: grid;
+  gap: 12px;
+}
+
+textarea,
+input {
   width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 12px;
+  color: var(--heading);
+  background: var(--surface);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+textarea {
+  min-height: 92px;
+  resize: vertical;
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+textarea:focus,
+input:focus {
+  border-color: #93b4f6;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.post-list form button,
+.form-login button,
+.form-register button {
+  justify-self: start;
+}
+
+.post > p:first-child {
+  margin: 0 0 8px;
+  color: var(--heading);
+  font-size: 16px;
+  line-height: 1.55;
+  white-space: pre-wrap;
 }
 
 .post small,
 .comment-author {
-  color: var(--text);
-  font-size: 0.78em;
-  font-weight: 400;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.comment-list {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.comment-list h3 {
+  margin: 0 0 10px;
+  color: var(--heading);
+  font-size: 14px;
 }
 
 .comment-items {
-  list-style: none;
-  margin: 12px 0;
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
   padding: 0;
-  text-align: left;
+  list-style: none;
 }
 
 .comment-item {
-  border: 1px solid var(--border);
   border-radius: 8px;
-  margin-bottom: 8px;
   padding: 10px 12px;
+  background: var(--surface-muted);
 }
 
 .comment-author {
   display: block;
   margin-bottom: 4px;
+  font-weight: 700;
 }
 
 .comment-text {
-  background: var(--accent-bg);
-  border-left: 3px solid var(--accent);
-  border-radius: 4px;
-  color: var(--text-h);
-  font-weight: 500;
   margin: 0;
-  padding: 8px 10px;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.comment-list form {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.comment-list form p {
+  grid-column: 1 / -1;
+}
+
+.form-login,
+.form-register {
+  padding: 24px;
+  margin-top: 64px;
+}
+
+.form-login h2,
+.form-register h2 {
+  margin: 0 0 18px;
+  color: var(--heading);
+  font-size: 24px;
+}
+
+.form-login form > div,
+.form-register form > div {
+  display: grid;
+  gap: 6px;
+}
+
+.form-login label,
+.form-register label {
+  color: var(--heading);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-login form p,
+.form-register form p,
+.post-list form p,
+.comment-list form p {
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.form-login > p,
+.form-register > p {
+  margin-top: 16px;
+  color: var(--muted);
+  text-align: center;
+}
+
+a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.App [role="alert"] {
+  width: min(680px, calc(100% - 32px));
+  margin: 16px auto 0;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.app-footer {
+  height: 24px;
+}
+
+@media (max-width: 640px) {
+  .app-header-nav {
+    width: min(100% - 24px, 960px);
+  }
+
+  .nav-right span {
+    display: none;
+  }
+
+  .feed,
+  .form-login,
+  .form-register {
+    width: calc(100% - 24px);
+  }
+
+  .feed {
+    margin: 20px auto;
+  }
+
+  .form-login,
+  .form-register {
+    margin-top: 24px;
+    padding: 20px;
+  }
+
+  .comment-list form {
+    grid-template-columns: 1fr;
+  }
+
+  .comment-list form button {
+    justify-self: start;
+  }
 }
